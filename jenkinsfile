@@ -11,7 +11,7 @@ pipeline {
         stage('Checkout Code') {
             steps {
                 // Pull the project (index.html + Dockerfile) from GitHub
-                git branch: 'main', url: 'https://github.com/Hari-9390-356441/demo.git'
+                git branch: 'feature', url: 'https://github.com/Hari-9390-356441/demo.git'
             }
         }
 
