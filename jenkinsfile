@@ -1,0 +1,43 @@
+pipeline {
+    agent any
+
+    environment {
+        DOCKER_HUB_REPO = "harigopal118/hello-jana-sir"
+        DOCKER_CREDENTIALS = "dockerhub-creds"   // Jenkins credentials ID
+        APP_PORT = "9618"
+    }
+
+    stages {
+        stage('Checkout Code') {
+            steps {
+                // Pull the project (index.html + Dockerfile) from GitHub
+                git branch: 'feature', url: 'https://github.com/Hari-9390-356441/demo.git'
+            }
+        }
+
+        stage('Build Docker Image') {
+            steps {
+                sh 'docker build -t $DOCKER_HUB_REPO:latest .'
+            }
+        }
+
+        stage('Push Docker Image') {
+            steps {
+                withDockerRegistry([ credentialsId: DOCKER_CREDENTIALS, url: "" ]) {
+                    sh 'docker push $DOCKER_HUB_REPO:latest'
+                }
+            }
+        }
+
+        stage('Run Container') {
+            steps {
+                sh '''
+                  docker stop hello-jana-sir || true
+                  docker rm hello-jana-sir || true
+                  docker run -d -p $APP_PORT:80 --name hello-jana-sir $DOCKER_HUB_REPO:latest
+                '''
+            }
+        }
+    }
+}
+
