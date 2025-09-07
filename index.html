@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hello Jana Sir</title>
+  <style>
+    body {
+      margin: 0;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: linear-gradient(135deg, #4facfe, #00f2fe);
+      overflow: hidden;
+      font-family: Arial, sans-serif;
+    }
+
+    h1 {
+      color: white;
+      font-size: 3.5rem;
+      text-shadow: 2px 2px 8px rgba(0,0,0,0.4);
+      animation: fadeIn 2s ease-in-out, glow 2s infinite alternate;
+      position: relative;
+      z-index: 10;
+    }
+
+    .emoji {
+      font-size: 3rem;
+      display: inline-block;
+      animation: wave 2s infinite;
+      margin-left: 10px;
+    }
+
+    /* Fade in effect */
+    @keyframes fadeIn {
+      from { opacity: 0; transform: scale(0.8); }
+      to { opacity: 1; transform: scale(1); }
+    }
+
+    /* Glowing text effect */
+    @keyframes glow {
+      from { text-shadow: 0 0 5px #fff, 0 0 10px #00f2fe, 0 0 20px #00f2fe; }
+      to { text-shadow: 0 0 20px #fff, 0 0 30px #4facfe, 0 0 40px #4facfe; }
+    }
+
+    /* Waving emoji */
+    @keyframes wave {
+      0% { transform: rotate(0deg); }
+      25% { transform: rotate(20deg); }
+      50% { transform: rotate(0deg); }
+      75% { transform: rotate(-20deg); }
+      100% { transform: rotate(0deg); }
+    }
+
+    /* Floating particles */
+    .particle {
+      position: absolute;
+      background: rgba(255, 255, 255, 0.8);
+      border-radius: 50%;
+      opacity: 0.7;
+      animation: floatUp linear infinite;
+    }
+
+    @keyframes floatUp {
+      from { transform: translateY(100vh) scale(0.5); opacity: 0; }
+      50%  { opacity: 1; }
+      to { transform: translateY(-10vh) scale(1.2); opacity: 0; }
+    }
+  </style>
+</head>
+<body>
+  <h1>Hello Jana Sir <span class="emoji">👋</span></h1>
+
+  <script>
+    // Create floating particles dynamically
+    const numParticles = 30;
+    for (let i = 0; i < numParticles; i++) {
+      const particle = document.createElement("div");
+      particle.classList.add("particle");
+      document.body.appendChild(particle);
+
+      // Random size
+      const size = Math.random() * 8 + 4; // 4px - 12px
+      particle.style.width = `${size}px`;
+      particle.style.height = `${size}px`;
+
+      // Random position
+      particle.style.left = `${Math.random() * 100}vw`;
+
+      // Random animation duration
+      particle.style.animationDuration = `${Math.random() * 10 + 5}s`;
+
+      // Random delay
+      particle.style.animationDelay = `${Math.random() * 10}s`;
+    }
+  </script>
+</body>
+</html>
+
