@@ -4,12 +4,14 @@ pipeline {
     environment {
         IMAGE_NAME = "photo-gallery"
         DOCKERHUB_USER = "harigopal118"
+        CONTAINER_NAME = "photo-gallery-container"
+        APP_PORT = "9111"
     }
 
     stages {
         stage('Checkout Code') {
             steps {
-                git branch: 'main', url=https://github.com/Hari-9390-356441/demo.git'
+                git branch: 'main', url: 'https://github.com/Hari-9390-356441/demo.git'
             }
         }
 
@@ -21,21 +23,7 @@ pipeline {
             }
         }
 
-        stage('Run Container') {
-            steps {
-                script {
-                    // Stop old container if running
-                    sh "docker rm -f ${IMAGE_NAME} || true"
-                    // Run new container
-                    sh "docker run -d -p 8080:80 --name ${IMAGE_NAME} ${IMAGE_NAME}:latest"
-                }
-            }
-        }
-
         stage('Push to DockerHub') {
-            when {
-                expression { return env.DOCKERHUB_USER != null }
-            }
             steps {
                 withCredentials([usernamePassword(credentialsId: 'dockerhub-creds', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
                     sh "echo $PASSWORD | docker login -u $USERNAME --password-stdin"
@@ -44,6 +32,17 @@ pipeline {
                 }
             }
         }
+
+        stage('Deploy Container') {
+            steps {
+                script {
+                    // Stop and remove old container if running
+                    sh "docker rm -f ${CONTAINER_NAME} || true"
+
+                    // Run new container from pushed image
+                    sh "docker run -d -p ${APP_PORT}:80 --name ${CONTAINER_NAME} $DOCKERHUB_USER/${IMAGE_NAME}:latest"
+                }
+            }
+        }
     }
 }
-
